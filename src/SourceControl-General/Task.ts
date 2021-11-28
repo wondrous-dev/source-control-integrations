@@ -1,5 +1,5 @@
 import { GUID } from "../Common/GUID";
-import { Label } from "./Label";
+import { Status } from "./Status";
 
 /**
  * Since Wonder is a task management suite for DAO's, not every user will be a dev.
@@ -15,8 +15,8 @@ import { Label } from "./Label";
 export interface Task {
   id: GUID;
   title: string;
-  label: Label;
-  updateLabel(newLabel: Label): boolean;
+  status: Status;
+  updateStatus(newStatus: Status): boolean;
 }
 
 /**
@@ -27,5 +27,5 @@ export interface Task {
  * @return {type} boolen - whether or not the two are equal
  */
 export function TasksAreEqual(a: Task, b: Task): boolean {
-  return a.id === b.id && a.title === b.title && a.label === b.label;
+  return a.id === b.id && a.title === b.title && a.status === b.status;
 }

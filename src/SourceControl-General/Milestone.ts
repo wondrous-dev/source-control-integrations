@@ -1,5 +1,5 @@
 import { GUID } from "../Common/GUID";
-import { Label } from "./Label";
+import { Status } from "./Status";
 import { Task, TasksAreEqual } from "./Task";
 
 /**
@@ -15,9 +15,9 @@ export interface Milestone {
   dueDate: Date;
   startDate: Date;
   completionDate: Date;
-  status: Label;
+  status: Status;
   tasks: { [key: string]: Task };
-  updateStatus(newStatus: Label): boolean;
+  updateStatus(newStatus: Status): boolean;
   complete(completionDate: Date): boolean;
 }
 
