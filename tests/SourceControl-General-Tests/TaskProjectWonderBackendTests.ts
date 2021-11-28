@@ -143,7 +143,7 @@ describe("Tasks Equality", () => {
   });
 });
 
-describe("Mileston Equality", () => {
+describe("Milestone Equality", () => {
   it("equal", () => {
     expect(MilestonesAreEqual(MilestoneA, MilestoneA)).to.equal(true);
   });
