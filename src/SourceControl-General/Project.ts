@@ -1,4 +1,5 @@
 import { GUID } from "../Common/GUID";
+import { SourceType } from "../Common/SourceType";
 import { Milestone, MilestonesAreEqual } from "./Milestone";
 import { Task, TasksAreEqual } from "./Task";
 
@@ -12,6 +13,7 @@ export interface Project {
   title: string;
   tasks: { [key: string]: Task };
   milestones: { [key: string]: Milestone };
+  sourceType: SourceType;
   sync(): boolean;
 }
 

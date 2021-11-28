@@ -1,20 +1,20 @@
 import { GUID } from "../../src/Common/GUID";
-import { Label } from "../../src/SourceControl-General/Label";
+import { Status } from "../../src/SourceControl-General/Status";
 import { Task } from "../../src/SourceControl-General/Task";
 
 export class MockTask implements Task {
   id: GUID;
   title: string;
-  label: Label;
+  status: Status;
 
-  constructor(title: string, label: Label) {
+  constructor(title: string, status: Status) {
     this.id = new GUID();
     this.title = title;
-    this.label = label;
+    this.status = status;
   }
 
-  updateLabel(newLabel: Label): boolean {
-    this.label = newLabel;
+  updateStatus(newStatus: Status): boolean {
+    this.status = newStatus;
     return true;
   }
 }

@@ -1,5 +1,5 @@
 import { GUID } from "../../src/Common/GUID";
-import { Label } from "../../src/SourceControl-General/Label";
+import { Status } from "../../src/SourceControl-General/Status";
 import { Milestone } from "../../src/SourceControl-General/Milestone";
 import { Task } from "../../src/SourceControl-General/Task";
 
@@ -10,7 +10,7 @@ export class MockMilestone implements Milestone {
   dueDate: Date;
   startDate: Date;
   completionDate: Date;
-  status: Label;
+  status: Status;
   tasks: { [key: string]: Task };
 
   constructor(
@@ -18,7 +18,7 @@ export class MockMilestone implements Milestone {
     description: string,
     dueDate: Date,
     startDate: Date,
-    status: Label,
+    status: Status,
     tasks: { [key: string]: Task },
     completionDate: Date = null
   ) {
@@ -32,7 +32,7 @@ export class MockMilestone implements Milestone {
     this.tasks = tasks;
   }
 
-  updateStatus(newStatus: Label): boolean {
+  updateStatus(newStatus: Status): boolean {
     this.status = newStatus;
     return true;
   }

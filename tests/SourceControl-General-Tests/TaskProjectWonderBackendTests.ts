@@ -1,4 +1,5 @@
-import { Label } from "../../src/SourceControl-General/Label";
+import { SourceType } from "../../src/Common/SourceType";
+import { Status } from "../../src/SourceControl-General/Status";
 import { MockMilestone } from "./MockMilestone";
 import { MockProject } from "./MockProject";
 import { MockTask } from "./MockTask";
@@ -9,10 +10,10 @@ import { TasksAreEqual } from "../../src/SourceControl-General/Task";
 import { SyncProjectWithWonder } from "../../src/SourceControl-General/WonderBackend";
 import { expect } from "chai";
 
-const TaskA = new MockTask("foo", Label.InProgress);
-const TaskB = new MockTask("foo", Label.InProgress);
-const TaskC = new MockTask("foo", Label.Todo);
-const TaskD = new MockTask("bar", Label.InProgress);
+const TaskA = new MockTask("foo", Status.InProgress);
+const TaskB = new MockTask("foo", Status.InProgress);
+const TaskC = new MockTask("foo", Status.Todo);
+const TaskD = new MockTask("bar", Status.InProgress);
 
 const today: Date = new Date();
 const tomorrow = new Date(today);
@@ -23,7 +24,7 @@ const MilestoneA = new MockMilestone(
   "",
   tomorrow,
   today,
-  Label.InProgress,
+  Status.InProgress,
   { foo: TaskA, bar: TaskD },
   null
 );
@@ -32,7 +33,7 @@ const MilestoneB = new MockMilestone(
   "",
   tomorrow,
   today,
-  Label.InProgress,
+  Status.InProgress,
   { foo: TaskA, bar: TaskD },
   null
 );
@@ -41,7 +42,7 @@ const MilestoneC = new MockMilestone(
   "",
   tomorrow,
   today,
-  Label.InProgress,
+  Status.InProgress,
   { foo: TaskA, bar: TaskD },
   tomorrow
 );
@@ -50,7 +51,7 @@ const MilestoneD = new MockMilestone(
   "",
   tomorrow,
   today,
-  Label.InProgress,
+  Status.InProgress,
   { foo: TaskA },
   null
 );
@@ -59,7 +60,7 @@ const MilestoneE = new MockMilestone(
   "",
   tomorrow,
   today,
-  Label.InProgress,
+  Status.InProgress,
   { foo: TaskC, bar: TaskD },
   null
 );
@@ -67,37 +68,44 @@ const MilestoneE = new MockMilestone(
 const ProjectA = new MockProject(
   "fooProject",
   { foo: TaskA, bar: TaskD },
-  { foo: MilestoneA }
+  { foo: MilestoneA },
+  SourceType.GitHub
 );
 const ProjectB = new MockProject(
   "fooProject",
   { foo: TaskA, bar: TaskD },
-  { foo: MilestoneA }
+  { foo: MilestoneA },
+  SourceType.GitHub
 );
 const ProjectC = new MockProject(
   "fooProject",
   { foo: TaskA },
-  { foo: MilestoneA }
+  { foo: MilestoneA },
+  SourceType.GitHub
 );
 const ProjectD = new MockProject(
   "fooProject",
   { foo: TaskC, bar: TaskD },
-  { foo: MilestoneA }
+  { foo: MilestoneA },
+  SourceType.GitHub
 );
 const ProjectE = new MockProject(
   "barProject",
   { foo: TaskA, bar: TaskD },
-  { foo: MilestoneA }
+  { foo: MilestoneA },
+  SourceType.GitHub
 );
 const ProjectF = new MockProject(
   "barProject",
   { foo: TaskA, bar: TaskD },
-  { foo: MilestoneA, bar: MilestoneC }
+  { foo: MilestoneA, bar: MilestoneC },
+  SourceType.GitHub
 );
 const ProjectG = new MockProject(
   "barProject",
   { foo: TaskA, bar: TaskD },
-  { foo: MilestoneE }
+  { foo: MilestoneE },
+  SourceType.GitHub
 );
 
 const WonderBackendA = new MockWonderBackend({
