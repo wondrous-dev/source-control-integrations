@@ -24,7 +24,7 @@ export class MockProject implements Project {
     this.sourceType = sourceType;
   }
 
-  sync(): boolean {
+  async synchronize(): Promise<boolean> {
     return true;
   }
 }

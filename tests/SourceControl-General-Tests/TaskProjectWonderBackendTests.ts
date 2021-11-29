@@ -196,15 +196,21 @@ describe("Project Equality", () => {
 });
 
 describe("SyncProjectWithWonder functions properly", () => {
-  it("happy path - no sync needed", () => {
-    expect(SyncProjectWithWonder(ProjectC, WonderBackendA)).to.equal(true);
+  it("happy path - no sync needed", async () => {
+    expect(await SyncProjectWithWonder(ProjectC, WonderBackendA)).to.equal(
+      true
+    );
   });
 
-  it("happy path - sync for one project, project not found", () => {
-    expect(SyncProjectWithWonder(ProjectD, WonderBackendA)).to.equal(true);
+  it("happy path - sync for one project, project not found", async () => {
+    expect(await SyncProjectWithWonder(ProjectD, WonderBackendA)).to.equal(
+      true
+    );
   });
 
-  it("happy path - sync for one project, different set of tasks", () => {
-    expect(SyncProjectWithWonder(ProjectA, WonderBackendA)).to.equal(true);
+  it("happy path - sync for one project, different set of tasks", async () => {
+    expect(await SyncProjectWithWonder(ProjectA, WonderBackendA)).to.equal(
+      true
+    );
   });
 });

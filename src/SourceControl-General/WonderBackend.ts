@@ -30,12 +30,12 @@ function GetOrAddWonderBackendProject(
  * @param  {type} wonderBackend: WonderBackend the backend to sync
  * @return {type}                              whether or not this succeeded
  */
-export function SyncProjectWithWonder(
+export async function SyncProjectWithWonder(
   project: Project,
   wonderBackend: WonderBackend
-): boolean {
+): Promise<Boolean> {
   // update the project so we get the latest state
-  project.sync();
+  await project.synchronize();
 
   let wonderBackendProject: Project;
   try {
