@@ -17,7 +17,7 @@ export class MockProject implements Project {
     milestones: { [key: string]: Milestone },
     sourceType: SourceType
   ) {
-    this.id = new GUID();
+    this.id = new GUID([title]);
     this.title = title;
     this.tasks = tasks;
     this.milestones = milestones;

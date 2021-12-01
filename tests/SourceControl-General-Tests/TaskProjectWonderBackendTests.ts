@@ -8,12 +8,13 @@ import { MilestonesAreEqual } from "../../src/SourceControl-General/Milestone";
 import { ProjectsAreEqual } from "../../src/SourceControl-General/Project";
 import { TasksAreEqual } from "../../src/SourceControl-General/Task";
 import { SyncProjectWithWonder } from "../../src/SourceControl-General/WonderBackend";
+import { GUID } from "../../src/Common/GUID";
 import { expect } from "chai";
 
-const TaskA = new MockTask("foo", Status.InProgress);
-const TaskB = new MockTask("foo", Status.InProgress);
-const TaskC = new MockTask("foo", Status.Todo);
-const TaskD = new MockTask("bar", Status.InProgress);
+const TaskA = new MockTask("foo", new GUID([""]), Status.InProgress);
+const TaskB = new MockTask("foo", new GUID([""]), Status.InProgress);
+const TaskC = new MockTask("foo", new GUID([""]), Status.Todo);
+const TaskD = new MockTask("bar", new GUID([""]), Status.InProgress);
 
 const today: Date = new Date();
 const tomorrow = new Date(today);
@@ -21,6 +22,7 @@ tomorrow.setDate(tomorrow.getDate() + 1);
 
 const MilestoneA = new MockMilestone(
   "fooMilestone",
+  new GUID([""]),
   "",
   tomorrow,
   today,
@@ -30,6 +32,7 @@ const MilestoneA = new MockMilestone(
 );
 const MilestoneB = new MockMilestone(
   "fooMilestone",
+  new GUID([""]),
   "",
   tomorrow,
   today,
@@ -39,6 +42,7 @@ const MilestoneB = new MockMilestone(
 );
 const MilestoneC = new MockMilestone(
   "fooMilestone",
+  new GUID([""]),
   "",
   tomorrow,
   today,
@@ -48,6 +52,7 @@ const MilestoneC = new MockMilestone(
 );
 const MilestoneD = new MockMilestone(
   "fooMilestone",
+  new GUID([""]),
   "",
   tomorrow,
   today,
@@ -57,6 +62,7 @@ const MilestoneD = new MockMilestone(
 );
 const MilestoneE = new MockMilestone(
   "fooMilestone",
+  new GUID([""]),
   "",
   tomorrow,
   today,

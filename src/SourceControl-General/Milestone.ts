@@ -11,6 +11,7 @@ import { Task, TasksAreEqual } from "./Task";
 export interface Milestone {
   id: GUID;
   title: string;
+  projectId: GUID;
   description: string;
   dueDate: Date;
   startDate: Date;

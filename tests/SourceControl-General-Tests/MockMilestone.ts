@@ -6,6 +6,7 @@ import { Task } from "../../src/SourceControl-General/Task";
 export class MockMilestone implements Milestone {
   id: GUID;
   title: string;
+  projectId: GUID;
   description: string;
   dueDate: Date;
   startDate: Date;
@@ -15,6 +16,7 @@ export class MockMilestone implements Milestone {
 
   constructor(
     title: string,
+    projectId: GUID,
     description: string,
     dueDate: Date,
     startDate: Date,
@@ -22,8 +24,9 @@ export class MockMilestone implements Milestone {
     tasks: { [key: string]: Task },
     completionDate: Date = null
   ) {
-    this.id = new GUID();
+    this.id = new GUID([title, projectId.toString()]);
     this.title = title;
+    this.projectId = projectId;
     this.description = description;
     this.dueDate = dueDate;
     this.startDate = startDate;

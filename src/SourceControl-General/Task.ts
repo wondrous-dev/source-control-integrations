@@ -15,6 +15,7 @@ import { Status } from "./Status";
 export interface Task {
   id: GUID;
   title: string;
+  projectId: GUID;
   status: Status;
   updateStatus(newStatus: Status): boolean;
 }

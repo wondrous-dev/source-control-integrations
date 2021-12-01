@@ -4,12 +4,14 @@ import { Task } from "../../src/SourceControl-General/Task";
 
 export class MockTask implements Task {
   id: GUID;
+  projectId: GUID;
   title: string;
   status: Status;
 
-  constructor(title: string, status: Status) {
-    this.id = new GUID();
+  constructor(title: string, projectId: GUID, status: Status) {
+    this.id = new GUID([title, projectId.toString()]);
     this.title = title;
+    this.projectId = projectId;
     this.status = status;
   }
 
