@@ -1,4 +1,3 @@
-import { GUID } from "../Common/GUID";
 import { Status } from "./Status";
 import { Task, TasksAreEqual } from "./Task";
 
@@ -9,9 +8,8 @@ import { Task, TasksAreEqual } from "./Task";
  * or update its status from Wonder.
  */
 export interface Milestone {
-  id: GUID;
+  id: string;
   title: string;
-  projectId: GUID;
   description: string;
   dueDate: Date;
   startDate: Date;

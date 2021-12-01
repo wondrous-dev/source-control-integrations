@@ -1,17 +1,14 @@
-import { GUID } from "../../src/Common/GUID";
 import { Status } from "../../src/SourceControl-General/Status";
 import { Task } from "../../src/SourceControl-General/Task";
 
 export class MockTask implements Task {
-  id: GUID;
-  projectId: GUID;
+  id: string;
   title: string;
   status: Status;
 
-  constructor(title: string, projectId: GUID, status: Status) {
-    this.id = new GUID([title, projectId.toString()]);
+  constructor(id: string, title: string, status: Status) {
+    this.id = id;
     this.title = title;
-    this.projectId = projectId;
     this.status = status;
   }
 

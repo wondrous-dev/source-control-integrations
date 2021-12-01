@@ -1,4 +1,3 @@
-import { GUID } from "../Common/GUID";
 import { SourceType } from "../Common/SourceType";
 import { Milestone, MilestonesAreEqual } from "./Milestone";
 import { Task, TasksAreEqual } from "./Task";
@@ -9,7 +8,7 @@ import { Task, TasksAreEqual } from "./Task";
  * data stored in this object.
  */
 export interface Project {
-  id: GUID;
+  id: string;
   title: string;
   tasks: { [key: string]: Task };
   milestones: { [key: string]: Milestone };
