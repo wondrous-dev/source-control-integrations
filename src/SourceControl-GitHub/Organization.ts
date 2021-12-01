@@ -9,15 +9,15 @@ export class Organization {
 
   id: number;
 
-  repos: Repository[];
+  repos: { [key: string]: Repository }
 
-  constructor(name: string, id: number, repos: Repository[]) {
+  constructor(name: string, id: number, repos: { [key: string]: Repository}) {
     this.name = name;
     this.id = id;
     this.repos = repos;
   }
 
   containsRepo(repoName: string): boolean {
-    return this.repos.filter((x) => x.title == repoName).length == 1;
+    return repoName in this.repos;
   }
 }

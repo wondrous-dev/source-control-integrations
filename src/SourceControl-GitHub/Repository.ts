@@ -4,9 +4,10 @@ import { Project } from "../SourceControl-General/Project";
 import { SourceType } from "../Common/SourceType";
 import { Task } from "../SourceControl-General/Task";
 import { APIWrapper } from "./APIWrapper";
+
 /**
- * See response to "get repo" for all available fields:
- * https://docs.github.com/en/rest/reference/repos#get-a-repository
+ * See response to "get milestone" for all available fields:
+ * https://docs.github.com/en/rest/reference/issues#milestones
  */
 export class Repository implements Project {
   id: GUID;
