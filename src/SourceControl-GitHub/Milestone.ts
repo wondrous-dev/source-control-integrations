@@ -1,11 +1,10 @@
-import { GUID } from "../Common/GUID";
 import { Milestone as GeneralMilestone } from "../SourceControl-General/Milestone";
 import { Status } from "../SourceControl-General/Status";
 import { Task } from "../SourceControl-General/Task";
 import { APIWrapper } from "./APIWrapper";
 
 export class Milestone implements GeneralMilestone {
-  id: GUID;
+  id: string;
 
   title: string;
 
@@ -24,6 +23,7 @@ export class Milestone implements GeneralMilestone {
   tasks: { [key: string]: Task };
 
   constructor(
+    id: string,
     title: string,
     orgName: string,
     description: string,
@@ -32,7 +32,7 @@ export class Milestone implements GeneralMilestone {
     status: string, // TODO: translate to status
     completionDate: Date = null
   ) {
-    this.id = new GUID();
+    this.id = id;
     this.title = title;
     this.orgName = orgName;
     this.description = description;
@@ -49,10 +49,10 @@ export class Milestone implements GeneralMilestone {
    * @param  {type} task: Task
    */
   addTask(task: Task) {
-    if (task.id.toString() in this.tasks) {
+    if (task.id in this.tasks) {
       throw Error("Unexpected duplicate task");
     } else {
-      this.tasks[task.id.toString()] = task;
+      this.tasks[task.id] = task;
     }
   }
 

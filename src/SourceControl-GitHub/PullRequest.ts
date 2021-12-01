@@ -1,4 +1,3 @@
-import { GUID } from "../Common/GUID";
 import { Status } from "../SourceControl-General/Status";
 import { Task } from "../SourceControl-General/Task";
 import { TaskType } from "../SourceControl-General/TaskType";
@@ -8,7 +7,7 @@ import { TaskType } from "../SourceControl-General/TaskType";
  * https://docs.github.com/en/rest/reference/pulls#list-pull-requests
  */
 export class PullRequest implements Task {
-  id: GUID;
+  id: string;
 
   title: string;
 
@@ -16,8 +15,8 @@ export class PullRequest implements Task {
 
   taskType: TaskType;
 
-  constructor(title: string, status: Status) {
-    this.id = new GUID();
+  constructor(id: string, title: string, status: Status) {
+    this.id = id;
     this.title = title;
     this.status = status;
     this.taskType = TaskType.PullRequest;

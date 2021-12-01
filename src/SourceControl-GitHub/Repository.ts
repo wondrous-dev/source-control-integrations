@@ -1,4 +1,3 @@
-import { GUID } from "../Common/GUID";
 import { Milestone } from "../SourceControl-General/Milestone";
 import { Project } from "../SourceControl-General/Project";
 import { SourceType } from "../Common/SourceType";
@@ -10,7 +9,7 @@ import { APIWrapper } from "./APIWrapper";
  * https://docs.github.com/en/rest/reference/issues#milestones
  */
 export class Repository implements Project {
-  id: GUID;
+  id: string;
 
   title: string;
 
@@ -22,14 +21,14 @@ export class Repository implements Project {
 
   sourceType: SourceType;
 
-  constructor(title: string, orgName: string) {
+  constructor(id: string, title: string, orgName: string) {
+    this.id = id;
     this.title = title;
     this.orgName = orgName;
     this.sourceType = SourceType.GitHub;
 
     // will be an issue here since GUID is random
     // TODO: derive GUID from uniqueness as derived from GitHub
-    this.id = new GUID();
     this.tasks = {};
     this.milestones = {};
   }
@@ -40,7 +39,7 @@ export class Repository implements Project {
    * @param  {type} task: Task
    */
   addTask(task: Task) {
-    if (task.id.toString() in this.tasks) {
+    if (task.id in this.tasks) {
       throw Error("Unexpected duplicate task");
     } else {
       this.tasks[task.id.toString()] = task;
@@ -54,10 +53,10 @@ export class Repository implements Project {
    * @param  {type} task: Task
    */
   addMilestone(milestone: Milestone) {
-    if (milestone.id.toString() in this.milestones) {
+    if (milestone.id in this.milestones) {
       throw Error("Unexpected duplicate milestone");
     } else {
-      this.milestones[milestone.id.toString()] = milestone;
+      this.milestones[milestone.id] = milestone;
     }
   }
 
@@ -69,7 +68,8 @@ export class Repository implements Project {
     try {
       const newRepoState = await APIWrapper.GetRepository(
         this.orgName,
-        this.title
+        this.title,
+        this.id
       );
 
       // since orgName and title are part of the repo's identification, we obviously

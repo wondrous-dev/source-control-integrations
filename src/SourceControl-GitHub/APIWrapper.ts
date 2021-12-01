@@ -27,18 +27,20 @@ export class APIWrapper {
 
     for (let i = 0; i < respRepos.data.length; i++) {
       let repoName = respRepos.data[i].name;
-      const repo = await this.GetRepository(orgName, repoName);
+      let repoId = respRepos.data[i].id.toString();
+      const repo = await this.GetRepository(orgName, repoName, repoId);
       repositories[repoName] = repo;
     }
 
-    return new Organization(orgName, id, repositories);
+    return new Organization(orgName, id.toString(), repositories);
   }
 
   static async GetRepository(
     orgName: string,
-    repoName: string
+    repoName: string,
+    repoId: string
   ): Promise<Repository> {
-    const repo = new Repository(repoName, orgName);
+    const repo = new Repository(repoId, repoName, orgName);
 
     // if > 100 issues, will be paged
     const respIssues = await octokit.rest.issues.listForRepo({
@@ -49,7 +51,7 @@ export class APIWrapper {
     respIssues.data
       .filter((i) => i.pull_request == null)
       // get actual status
-      .map((i) => new Issue(i.title, Status.Todo))
+      .map((i) => new Issue(i.id.toString(), i.title, Status.Todo))
       .forEach((i) => repo.addTask(i));
 
     // if > 100 prs, will be paged
@@ -59,7 +61,7 @@ export class APIWrapper {
     });
 
     respPullRequests.data
-      .map((pr) => new PullRequest(pr.title, Status.InProgress))
+      .map((pr) => new PullRequest(pr.id.toString(), pr.title, Status.InProgress))
       .forEach((pr) => repo.addTask(pr));
 
     // if > 100 prs, will be paged
@@ -81,7 +83,7 @@ export class APIWrapper {
     });
 
     const milestones = respMilestones.data
-      .map((m) => new Milestone(m.title, orgName, m.description, new Date(m.due_on), new Date(m.created_at), m.state, m.closed_at === null ? null : new Date(m.closed_at)));
+      .map((m) => new Milestone(m.id.toString(), m.title, orgName, m.description, new Date(m.due_on), new Date(m.created_at), m.state, m.closed_at === null ? null : new Date(m.closed_at)));
 
     return milestones;
   }

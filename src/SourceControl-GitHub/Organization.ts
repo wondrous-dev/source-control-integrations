@@ -7,11 +7,11 @@ import { Repository } from "./Repository";
 export class Organization {
   name: string;
 
-  id: number;
+  id: string;
 
   repos: { [key: string]: Repository }
 
-  constructor(name: string, id: number, repos: { [key: string]: Repository}) {
+  constructor(name: string, id: string, repos: { [key: string]: Repository}) {
     this.name = name;
     this.id = id;
     this.repos = repos;
