@@ -1,4 +1,3 @@
-import { GUID } from "../Common/GUID";
 import { Status } from "./Status";
 
 /**
@@ -13,7 +12,7 @@ import { Status } from "./Status";
  * interface
  */
 export interface Task {
-  id: GUID;
+  id: string;
   title: string;
   status: Status;
   updateStatus(newStatus: Status): boolean;

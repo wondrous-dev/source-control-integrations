@@ -1,10 +1,9 @@
-import { GUID } from "../../src/Common/GUID";
 import { Status } from "../../src/SourceControl-General/Status";
 import { Milestone } from "../../src/SourceControl-General/Milestone";
 import { Task } from "../../src/SourceControl-General/Task";
 
 export class MockMilestone implements Milestone {
-  id: GUID;
+  id: string;
   title: string;
   description: string;
   dueDate: Date;
@@ -14,6 +13,7 @@ export class MockMilestone implements Milestone {
   tasks: { [key: string]: Task };
 
   constructor(
+    id: string,
     title: string,
     description: string,
     dueDate: Date,
@@ -22,7 +22,7 @@ export class MockMilestone implements Milestone {
     tasks: { [key: string]: Task },
     completionDate: Date = null
   ) {
-    this.id = new GUID();
+    this.id = id;
     this.title = title;
     this.description = description;
     this.dueDate = dueDate;
