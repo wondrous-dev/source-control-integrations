@@ -9,9 +9,9 @@ export class Organization {
 
   id: string;
 
-  repos: { [key: string]: Repository }
+  repos: { [key: string]: Repository };
 
-  constructor(name: string, id: string, repos: { [key: string]: Repository}) {
+  constructor(name: string, id: string, repos: { [key: string]: Repository }) {
     this.name = name;
     this.id = id;
     this.repos = repos;

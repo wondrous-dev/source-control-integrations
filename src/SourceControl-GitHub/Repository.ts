@@ -26,9 +26,6 @@ export class Repository implements Project {
     this.title = title;
     this.orgName = orgName;
     this.sourceType = SourceType.GitHub;
-
-    // will be an issue here since GUID is random
-    // TODO: derive GUID from uniqueness as derived from GitHub
     this.tasks = {};
     this.milestones = {};
   }

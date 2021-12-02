@@ -7,3 +7,10 @@ export enum Status {
   InReview,
   Completed,
 }
+
+export function StringToStatus(status: string): Status {
+  switch (status.toLowerCase().trim()) {
+    case "open":
+      return Status.Todo;
+  }
+}

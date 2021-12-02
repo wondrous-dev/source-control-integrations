@@ -4,7 +4,6 @@ import { Milestone } from "./Milestone";
 import { Organization } from "./Organization";
 import { PullRequest } from "./PullRequest";
 import { Repository } from "./Repository";
-import { Status } from "../SourceControl-General/Status";
 
 // authenticate via personal token for now
 const octokit = new Octokit({ auth: process.env._AUTHTOKEN });
@@ -21,9 +20,11 @@ export class APIWrapper {
     const {
       data: { id },
     } = await octokit.rest.orgs.get({ org: orgName });
+
+    const repositories: { [key: string]: Repository } = {};
+
     // if > 100 repos, will be paged
     const respRepos = await octokit.rest.repos.listForOrg({ org: orgName });
-    const repositories: { [key: string]: Repository } = {};
 
     for (let i = 0; i < respRepos.data.length; i++) {
       let repoName = respRepos.data[i].name;
@@ -51,7 +52,7 @@ export class APIWrapper {
     respIssues.data
       .filter((i) => i.pull_request == null)
       // get actual status
-      .map((i) => new Issue(i.id.toString(), i.title, Status.Todo))
+      .map((i) => new Issue(i.id.toString(), i.title, i.state))
       .forEach((i) => repo.addTask(i));
 
     // if > 100 prs, will be paged
@@ -61,13 +62,12 @@ export class APIWrapper {
     });
 
     respPullRequests.data
-      .map((pr) => new PullRequest(pr.id.toString(), pr.title, Status.InProgress))
+      .map((pr) => new PullRequest(pr.id.toString(), pr.title, pr.state))
       .forEach((pr) => repo.addTask(pr));
 
     // if > 100 prs, will be paged
     const respMilestones = await this.GetMilestones(orgName, repoName);
-    respMilestones
-      .forEach((m) => repo.addMilestone(m));
+    respMilestones.forEach((m) => repo.addMilestone(m));
 
     return repo;
   }
@@ -82,8 +82,19 @@ export class APIWrapper {
       repo: repoName,
     });
 
-    const milestones = respMilestones.data
-      .map((m) => new Milestone(m.id.toString(), m.title, orgName, m.description, new Date(m.due_on), new Date(m.created_at), m.state, m.closed_at === null ? null : new Date(m.closed_at)));
+    const milestones = respMilestones.data.map(
+      (m) =>
+        new Milestone(
+          m.id.toString(),
+          m.title,
+          orgName,
+          m.description,
+          new Date(m.due_on),
+          new Date(m.created_at),
+          m.state,
+          m.closed_at === null ? null : new Date(m.closed_at)
+        )
+    );
 
     return milestones;
   }

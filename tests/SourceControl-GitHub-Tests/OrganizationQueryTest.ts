@@ -1,5 +1,6 @@
 import { Organization } from "../../src/SourceControl-GitHub/Organization";
 import { APIWrapper } from "../../src/SourceControl-GitHub/APIWrapper";
+import { Status } from "../../src/SourceControl-General/Status";
 
 import { expect } from "chai";
 
@@ -13,6 +14,11 @@ describe("Properly Queries Organization", async () => {
     const org: Organization = await APIWrapper.GetOrganization(thisOrgName);
     expect(org.containsRepo(thisRepoName)).to.equal(true);
     expect(org.containsRepo(nonExistantRepoName)).to.equal(false);
-    expect((testMilestoneId in org.repos[thisRepoName].milestones)).to.equal(true);
+    expect(testMilestoneId in org.repos[thisRepoName].milestones).to.equal(
+      true
+    );
+    expect(org.repos[thisRepoName].milestones[testMilestoneId].status).to.equal(
+      Status.InProgress
+    );
   });
 });

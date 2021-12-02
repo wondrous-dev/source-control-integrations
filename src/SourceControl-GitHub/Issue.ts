@@ -15,16 +15,14 @@ export class Issue implements Task {
 
   taskType: TaskType;
 
-  constructor(id: string, title: string, status: Status) {
+  constructor(id: string, title: string, stateString: string) {
     this.id = id;
     this.title = title;
-    this.status = status;
+    this.status = stateString == "open" ? Status.Todo : Status.Completed;
     this.taskType = TaskType.Issue;
   }
 
-  // TODO: actually update GitHub
   updateStatus(newStatus: Status): boolean {
-    this.status = newStatus;
-    return true;
+    throw Error("Not implemented. When implemented, update to " + newStatus);
   }
 }

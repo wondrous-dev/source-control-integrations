@@ -1,7 +1,6 @@
 import { Milestone as GeneralMilestone } from "../SourceControl-General/Milestone";
 import { Status } from "../SourceControl-General/Status";
 import { Task } from "../SourceControl-General/Task";
-import { APIWrapper } from "./APIWrapper";
 
 export class Milestone implements GeneralMilestone {
   id: string;
@@ -29,7 +28,7 @@ export class Milestone implements GeneralMilestone {
     description: string,
     dueDate: Date,
     startDate: Date,
-    status: string, // TODO: translate to status
+    stateString: string,
     completionDate: Date = null
   ) {
     this.id = id;
@@ -39,7 +38,7 @@ export class Milestone implements GeneralMilestone {
     this.dueDate = dueDate;
     this.startDate = startDate;
     this.completionDate = completionDate;
-    this.status = Status.InReview; // TODO: fix
+    this.status = stateString == "open" ? Status.InProgress : Status.Completed;
     this.tasks = {};
   }
 
@@ -56,13 +55,11 @@ export class Milestone implements GeneralMilestone {
     }
   }
 
-  // TODO: implement
-  updateStatus(): boolean {
-    return true;
+  updateStatus(newStatus: Status): boolean {
+    throw Error("Not implemented. When implemented, update to " + newStatus);
   }
 
-  // TODO: implement
   complete(): boolean {
-    return true;
+    throw Error("Not implemented.");
   }
 }
