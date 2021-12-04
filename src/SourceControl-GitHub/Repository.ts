@@ -60,6 +60,10 @@ export class Repository implements Project {
   /**
    * Synchronize this Repository's internal state with GitHub, i.e. the Source
    * of Truth.
+   *
+   *  @return {type}            boolean value here denotes successful, i.e. is
+   *                            still part of this org and still exists. Throws
+   *                            in exceptional circumstance.
    */
   async synchronize(): Promise<boolean> {
     try {
@@ -68,18 +72,26 @@ export class Repository implements Project {
         this.id
       );
 
-      // TODO: detect org movement. If this happens, we need to drop it from the
-      // "owning" org
-      this.orgName = newRepoState.orgName;
+      // repo moved orgs
+      if (this.orgName !== newRepoState.orgName) {
+        return false;
+      }
+
       this.title = newRepoState.title;
       this.tasks = newRepoState.tasks;
       this.milestones = newRepoState.milestones;
 
       return true;
-    } catch (ex) {
-      // TODO: log this exception. Silent failure is evil.
+    } catch (e) {
+      // TODO: proper logging
       // https://github.com/wondrous-dev/source-control-integrations/issues/9
-      return false;
+
+      // not found, thus bad id
+      if (e.status == 404) {
+        return false;
+      }
+
+      throw e;
     }
   }
 }

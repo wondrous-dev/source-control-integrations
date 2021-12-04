@@ -21,10 +21,8 @@ describe("Properly Queries Organization", async () => {
       Status.InProgress
     );
   });
-});
 
-describe("Properly", async () => {
-  it("wondrous-dev contains 'source-control-integrations' but not 'go-programming-language'", async () => {
+  it("wondrous-dev contains 'source-control-integrations' which can synchronize successfully", async () => {
     const org: Organization = await APIWrapper.GetOrganization(thisOrgName);
     expect(await org.repos[thisRepoName].synchronize()).to.equal(true);
   });
