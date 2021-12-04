@@ -55,10 +55,12 @@ export class Milestone implements GeneralMilestone {
     }
   }
 
+  // https://github.com/wondrous-dev/source-control-integrations/issues/8
   updateStatus(newStatus: Status): boolean {
     throw Error("Not implemented. When implemented, update to " + newStatus);
   }
 
+  // https://github.com/wondrous-dev/source-control-integrations/issues/8
   complete(): boolean {
     throw Error("Not implemented.");
   }

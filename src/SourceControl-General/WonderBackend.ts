@@ -34,14 +34,16 @@ export async function SyncProjectWithWonder(
   project: Project,
   wonderBackend: WonderBackend
 ): Promise<Boolean> {
-  // update the project so we get the latest state
-  await project.synchronize();
-
   let wonderBackendProject: Project;
+
   try {
+    // update the project so we get the latest state
+    await project.synchronize();
+
     wonderBackendProject = GetOrAddWonderBackendProject(wonderBackend, project);
   } catch (ex) {
     // TODO: add logging
+    // https://github.com/wondrous-dev/source-control-integrations/issues/9
     return false;
   }
 
@@ -80,6 +82,7 @@ export async function SyncProjectWithWonder(
     return true;
   } else {
     // TODO: add logging
+    // https://github.com/wondrous-dev/source-control-integrations/issues/9
     // So here true means, was updated correctly. This true means the projects
     // are equivalent, i.e. in sync.  The other code path is for when they are
     // not equivalent, which force updates and then throws if the force update

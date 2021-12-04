@@ -6,6 +6,9 @@ import { PullRequest } from "./PullRequest";
 import { Repository } from "./Repository";
 
 // authenticate via personal token for now
+if (process.env._AUTHTOKEN === null || process.env._AUTHTOKEN === "") {
+  throw Error("GitHub Auth Token not found.");
+}
 const octokit = new Octokit({ auth: process.env._AUTHTOKEN });
 
 export class APIWrapper {
@@ -24,14 +27,15 @@ export class APIWrapper {
     const repositories: { [key: string]: Repository } = {};
 
     // if > 100 repos, will be paged
+    // https://github.com/wondrous-dev/source-control-integrations/issues/10
     const respRepos = await octokit.rest.repos.listForOrg({ org: orgName });
 
-    for (let i = 0; i < respRepos.data.length; i++) {
-      let repoName = respRepos.data[i].name;
-      let repoId = respRepos.data[i].id.toString();
-      const repo = await this.GetRepository(orgName, repoName, repoId);
-      repositories[repoName] = repo;
-    }
+    await Promise.all(
+      respRepos.data.map(async (r) => {
+        const repo = await this.GetRepository(orgName, r.name, r.id.toString());
+        repositories[r.name] = repo;
+      })
+    );
 
     return new Organization(orgName, id.toString(), repositories);
   }
@@ -42,31 +46,58 @@ export class APIWrapper {
     repoId: string
   ): Promise<Repository> {
     const repo = new Repository(repoId, repoName, orgName);
+    return this.ResolveRepository(repo);
+  }
 
+  // uses undocumented API:
+  // https://stackoverflow.com/questions/40798018/are-the-github-repository-id-numbers-permanent
+  static async GetRepositoryById(orgName, repoId: string): Promise<Repository> {
+    const repoResp = await octokit.request("GET /repositories/" + repoId, {
+      owner: "octocat",
+      repo: "hello-world",
+    });
+
+    const repoName = repoResp.data.name;
+
+    const repo = new Repository(
+      repoId,
+      repoName,
+      repoResp.data.organization.login
+    );
+
+    return this.ResolveRepository(repo);
+  }
+
+  static async ResolveRepository(repo: Repository): Promise<Repository> {
     // if > 100 issues, will be paged
+    // https://github.com/wondrous-dev/source-control-integrations/issues/10
     const respIssues = await octokit.rest.issues.listForRepo({
-      owner: orgName,
-      repo: repoName,
+      owner: repo.orgName,
+      repo: repo.title,
     });
 
-    respIssues.data
-      .filter((i) => i.pull_request == null)
-      // get actual status
-      .map((i) => new Issue(i.id.toString(), i.title, i.state))
-      .forEach((i) => repo.addTask(i));
+    respIssues.data.forEach((i) => {
+      if (i.pull_request === null) {
+        const issue = new Issue(i.id.toString(), i.title, i.state);
+        repo.addTask(issue);
+      }
+    });
 
     // if > 100 prs, will be paged
+    // https://github.com/wondrous-dev/source-control-integrations/issues/10
     const respPullRequests = await octokit.rest.pulls.list({
-      owner: orgName,
-      repo: repoName,
+      owner: repo.orgName,
+      repo: repo.title,
     });
 
-    respPullRequests.data
-      .map((pr) => new PullRequest(pr.id.toString(), pr.title, pr.state))
-      .forEach((pr) => repo.addTask(pr));
+    respPullRequests.data.forEach((pr) => {
+      const p = new PullRequest(pr.id.toString(), pr.title, pr.state);
+      repo.addTask(p);
+    });
 
     // if > 100 prs, will be paged
-    const respMilestones = await this.GetMilestones(orgName, repoName);
+    // https://github.com/wondrous-dev/source-control-integrations/issues/10
+    const respMilestones = await this.GetMilestones(repo.orgName, repo.title);
     respMilestones.forEach((m) => repo.addMilestone(m));
 
     return repo;
@@ -77,6 +108,7 @@ export class APIWrapper {
     repoName: string
   ): Promise<Milestone[]> {
     // if > 100 milestones, will be paged
+    // https://github.com/wondrous-dev/source-control-integrations/issues/10
     const respMilestones = await octokit.rest.issues.listMilestones({
       owner: orgName,
       repo: repoName,

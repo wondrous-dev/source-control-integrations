@@ -22,6 +22,7 @@ export class PullRequest implements Task {
     this.taskType = TaskType.PullRequest;
   }
 
+  // https://github.com/wondrous-dev/source-control-integrations/issues/8
   updateStatus(newStatus: Status): boolean {
     throw Error("Not implemented. When implemented, update to " + newStatus);
   }

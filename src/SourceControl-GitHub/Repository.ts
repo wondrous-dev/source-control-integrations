@@ -59,34 +59,26 @@ export class Repository implements Project {
 
   /**
    * Synchronize this Repository's internal state with GitHub, i.e. the Source
-   * of Truth
+   * of Truth.
    */
   async synchronize(): Promise<boolean> {
     try {
-      const newRepoState = await APIWrapper.GetRepository(
+      const newRepoState = await APIWrapper.GetRepositoryById(
         this.orgName,
-        this.title,
         this.id
       );
 
-      // since orgName and title are part of the repo's identification, we obviously
-      // do not update those. In fact, if those come back different, we have a
-      // problem.
-      if (
-        this.title != newRepoState.title ||
-        this.orgName != newRepoState.orgName
-      ) {
-        throw Error(
-          "Repository's orgname and/or title unexpectedly came back different when attempting to synchronize."
-        );
-      }
-
+      // TODO: detect org movement. If this happens, we need to drop it from the
+      // "owning" org
+      this.orgName = newRepoState.orgName;
+      this.title = newRepoState.title;
       this.tasks = newRepoState.tasks;
       this.milestones = newRepoState.milestones;
 
       return true;
     } catch (ex) {
       // TODO: log this exception. Silent failure is evil.
+      // https://github.com/wondrous-dev/source-control-integrations/issues/9
       return false;
     }
   }
