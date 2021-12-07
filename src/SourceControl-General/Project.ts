@@ -13,7 +13,7 @@ export interface Project {
   tasks: { [key: string]: Task };
   milestones: { [key: string]: Milestone };
   sourceType: SourceType;
-  sync(): boolean;
+  synchronize(): Promise<boolean>;
 }
 
 /**
