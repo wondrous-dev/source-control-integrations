@@ -31,6 +31,20 @@ export class Repository implements Project {
 	}
 
 	/**
+	 * getTasks - helper to get all the tasks in a repo
+	 */
+	getTasks() {
+		return Object.values(this.tasks)
+	}
+
+	/**
+	 * getTasks - helper to get all the tasks in a repo
+	 */
+	getMilestones() {
+		return Object.values(this.milestones)
+	}
+
+	/**
 	 * addTask - helper to append Task to Repository's internal collection of Tasks
 	 *
 	 * @param  {type} task: Task
@@ -67,7 +81,8 @@ export class Repository implements Project {
 	 */
 	async synchronize(): Promise<boolean> {
 		try {
-			const newRepoState = await APIWrapper.getRepositoryById(
+			const apiWrapper = new APIWrapper()
+			const newRepoState = await apiWrapper.getRepositoryById(
 				this.orgName,
 				this.id
 			)

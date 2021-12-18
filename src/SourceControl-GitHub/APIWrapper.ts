@@ -1,5 +1,4 @@
 import { Octokit } from "octokit"
-import request from "@octokit/request"
 import { createOAuthUserAuth } from "@octokit/auth-oauth-user"
 import { Issue } from "./Issue"
 import { Milestone } from "./Milestone"
@@ -12,7 +11,7 @@ const githubClientId = process.env.GITHUB_CLIENT_ID
 if (process.env._AUTHTOKEN === null || process.env._AUTHTOKEN === "") {
 	throw Error("GitHub Auth Token not found.")
 }
-const octokit = new Octokit({ auth: process.env._AUTHTOKEN })
+const defaultOctokit = new Octokit({ auth: process.env._AUTHTOKEN })
 
 interface UserRepo {
 	id: number
@@ -23,8 +22,8 @@ type AccessTokenMap = {
 	[key: string]: string
 }
 
-type AuthObjectMap = {
-	[key: string]: any
+type AuthOctokitMap = {
+	[key: string]: Octokit
 }
 
 export class APIWrapper {
@@ -32,18 +31,20 @@ export class APIWrapper {
 	userOctokit: any
 	userAuthentication: any
 	userAccessTokenMap: AccessTokenMap
-	userAuthObjectMap: AuthObjectMap
+	userAuthOctokitMap: AuthOctokitMap
 
 	constructor() {
 		this.userOctokit = null
 		this.userAuthentication = null
 		this.userAccessTokenMap = {}
-		this.userAuthObjectMap = {}
+		this.userAuthOctokitMap = {}
 	}
 
 	checkUserAccessTokenExists(userId): Boolean {
 		// Checks whether there is a userOctokit in this cache
-		return !!(this.userAuthObjectMap[userId] && this.userAccessTokenMap[userId])
+		return !!(
+			this.userAuthOctokitMap[userId] && this.userAccessTokenMap[userId]
+		)
 	}
 
 	/**
@@ -67,8 +68,11 @@ export class APIWrapper {
 		this.userOctokit = auth
 		const userAuthentication = await auth()
 		// Store token in backend
-		this.userAuthObjectMap[userId] = auth
 		this.userAccessTokenMap[userId] = userAuthentication?.token
+		const octokit = new Octokit({
+			auth: this.userAccessTokenMap[userId]
+		})
+		this.userAuthOctokitMap[userId] = octokit
 	}
 
 	/** getUserRepos - gets all the repos from an OAuthed user
@@ -77,29 +81,25 @@ export class APIWrapper {
 	 * @return {type} [userRepos]: Array<UserRepo>
 	 */
 	async getUserOrgs(userId): Promise<Array<UserRepo>> {
-		if (!this.userAccessTokenMap[userId]) {
+		if (!this.checkUserAccessTokenExists(userId)) {
 			throw new Error("No authenticated user!")
 		}
 		try {
-			console.log("userOctokit", this.userAuthObjectMap[userId])
-			console.log("access_token", this.userAccessTokenMap[userId])
-			const octokit = new Octokit({
-				auth: this.userAccessTokenMap[userId]
-			})
-			const userOrgs = await octokit.request("GET /user/orgs")
-
-			console.log("userOrgs check", userOrgs?.data)
+			const userOrgs = await this.userAuthOctokitMap[userId].request(
+				"GET /user/orgs"
+			)
 			const finalUserOrgs = userOrgs?.data?.map((userOrg) => ({
 				id: userOrg?.id,
 				name: userOrg?.url && userOrg?.url.split("/").at(-1)
 			}))
-			console.log("final userOrgs check", finalUserOrgs)
+
 			return finalUserOrgs
 		} catch (err) {
 			// Logging for error request user repos
 			console.error(err)
 		}
 	}
+
 	/**
 	 * getOrganization - queries GitHub for Organization information, resolving all
 	 *                   sub info, such as Repositories, Issues, etc.
@@ -107,7 +107,14 @@ export class APIWrapper {
 	 * @param  {type} orgName: string organization name
 	 * @return {type}                 a GitHub organization
 	 */
-	static async getOrganization(orgName: string): Promise<Organization> {
+	async getOrganization(
+		orgName: string,
+		userId: string
+	): Promise<Organization> {
+		if (!this.checkUserAccessTokenExists(userId)) {
+			throw new Error("No authenticated user!")
+		}
+		const octokit = this.userAuthOctokitMap[userId]
 		const {
 			data: { id }
 		} = await octokit.rest.orgs.get({ org: orgName })
@@ -116,11 +123,18 @@ export class APIWrapper {
 
 		// if > 100 repos, will be paged
 		// https://github.com/wondrous-dev/source-control-integrations/issues/10
-		const respRepos = await octokit.rest.repos.listForOrg({ org: orgName })
+		const respRepos = await octokit.request("GET /orgs/{org}/repos", {
+			org: orgName
+		})
 
 		await Promise.all(
 			respRepos.data.map(async (r) => {
-				const repo = await this.getRepository(orgName, r.name, r.id.toString())
+				const repo = await this.getRepository(
+					orgName,
+					r.name,
+					r.id.toString(),
+					userId
+				)
 				repositories[r.name] = repo
 			})
 		)
@@ -128,22 +142,30 @@ export class APIWrapper {
 		return new Organization(orgName, id.toString(), repositories)
 	}
 
-	static async getRepository(
+	async getRepository(
 		orgName: string,
 		repoName: string,
-		repoId: string
+		repoId: string,
+		userId
 	): Promise<Repository> {
+		if (!this.checkUserAccessTokenExists(userId)) {
+			throw new Error("No authenticated user!")
+		}
+
 		const repo = new Repository(repoId, repoName, orgName)
-		return this.resolveRepository(repo)
+		return this.resolveRepository(repo, userId)
 	}
 
 	// uses undocumented API:
 	// https://stackoverflow.com/questions/40798018/are-the-github-repository-id-numbers-permanent
-	static async getRepositoryById(orgName, repoId: string): Promise<Repository> {
-		const repoResp = await octokit.request("GET /repositories/" + repoId, {
-			owner: "octocat",
-			repo: "hello-world"
-		})
+	async getRepositoryById(orgName, repoId: string): Promise<Repository> {
+		const repoResp = await defaultOctokit.request(
+			"GET /repositories/" + repoId,
+			{
+				owner: "octocat",
+				repo: "hello-world"
+			}
+		)
 
 		const repoName = repoResp.data.name
 
@@ -153,19 +175,24 @@ export class APIWrapper {
 			repoResp.data.organization.login
 		)
 
-		return this.resolveRepository(repo)
+		return this.resolveRepository(repo, null)
 	}
 
-	static async resolveRepository(repo: Repository): Promise<Repository> {
+	async resolveRepository(repo: Repository, userId): Promise<Repository> {
 		// if > 100 issues, will be paged
 		// https://github.com/wondrous-dev/source-control-integrations/issues/10
-		const respIssues = await octokit.rest.issues.listForRepo({
-			owner: repo.orgName,
-			repo: repo.title
-		})
+		const octokit = this.userAuthOctokitMap[userId]
+
+		const respIssues = await octokit.request(
+			"GET /repos/{owner}/{repo}/issues",
+			{
+				owner: repo.orgName,
+				repo: repo.title
+			}
+		)
 
 		respIssues.data.forEach((i) => {
-			if (i.pull_request === null) {
+			if (!i.pull_request) {
 				const issue = new Issue(i.id.toString(), i.title, i.state)
 				repo.addTask(issue)
 			}
@@ -187,18 +214,24 @@ export class APIWrapper {
 
 		// if > 100 prs, will be paged
 		// https://github.com/wondrous-dev/source-control-integrations/issues/10
-		const respMilestones = await this.getMilestones(repo.orgName, repo.title)
+		const respMilestones = await this.getMilestones(
+			repo.orgName,
+			repo.title,
+			userId
+		)
 		respMilestones.forEach((m) => repo.addMilestone(m))
 
 		return repo
 	}
 
-	static async getMilestones(
+	async getMilestones(
 		orgName: string,
-		repoName: string
+		repoName: string,
+		userId
 	): Promise<Milestone[]> {
 		// if > 100 milestones, will be paged
 		// https://github.com/wondrous-dev/source-control-integrations/issues/10
+		const octokit = this.userAuthOctokitMap[userId] || defaultOctokit
 		const respMilestones = await octokit.rest.issues.listMilestones({
 			owner: orgName,
 			repo: repoName
