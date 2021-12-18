@@ -1,5 +1,5 @@
-import { Status } from './Status'
-import { Task, TasksAreEqual } from './Task'
+import { Status } from "./Status"
+import { Task, TasksAreEqual } from "./Task"
 
 /**
  * A milestone is a goal or desired outcome. While a Milestone is nearly as

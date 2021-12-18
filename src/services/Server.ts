@@ -1,7 +1,7 @@
-import express from 'express'
-import bodyParser from 'body-parser'
+import express from "express"
+import bodyParser from "body-parser"
 
-import router from './Router'
+import router from "./Router"
 
 export class Server {
 	private app: express.Express
@@ -9,7 +9,7 @@ export class Server {
 	constructor () {
 		this.app = express()
 		this.app.use(bodyParser.json())
-		this.app.use('/', router)
+		this.app.use("/", router)
 	}
 
 	start (): void {

@@ -1,6 +1,6 @@
-import { Server } from './Server'
+import { Server } from "./Server"
 
-import { Injector } from 'reduct'
+import { Injector } from "reduct"
 
 export class App {
 	private server: Server

@@ -1,4 +1,4 @@
-import { Status } from './Status'
+import { Status } from "./Status"
 
 /**
  * Since Wonder is a task management suite for DAO's, not every user will be a dev.

@@ -1,8 +1,8 @@
-import { Milestone } from '../SourceControl-General/Milestone'
-import { Project } from '../SourceControl-General/Project'
-import { SourceType } from '../Common/SourceType'
-import { Task } from '../SourceControl-General/Task'
-import { APIWrapper } from './APIWrapper'
+import { Milestone } from "../SourceControl-General/Milestone"
+import { Project } from "../SourceControl-General/Project"
+import { SourceType } from "../Common/SourceType"
+import { Task } from "../SourceControl-General/Task"
+import { APIWrapper } from "./APIWrapper"
 
 /**
  * See response to "get milestone" for all available fields:
@@ -51,7 +51,7 @@ export class Repository implements Project {
 	 */
 	addTask (task: Task) {
 		if (task.id in this.tasks) {
-			throw Error('Unexpected duplicate task')
+			throw Error("Unexpected duplicate task")
 		} else {
 			this.tasks[task.id.toString()] = task
 		}
@@ -65,7 +65,7 @@ export class Repository implements Project {
 	 */
 	addMilestone (milestone: Milestone) {
 		if (milestone.id in this.milestones) {
-			throw Error('Unexpected duplicate milestone')
+			throw Error("Unexpected duplicate milestone")
 		} else {
 			this.milestones[milestone.id] = milestone
 		}
@@ -102,7 +102,7 @@ export class Repository implements Project {
 			// https://github.com/wondrous-dev/source-control-integrations/issues/9
 
 			// not found, thus bad id
-			if (e.status == 404) {
+			if (e.status === 404) {
 				return false
 			}
 

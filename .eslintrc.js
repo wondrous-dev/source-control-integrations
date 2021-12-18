@@ -18,7 +18,7 @@ module.exports = {
 		indent: [2, "tab", { SwitchCase: 1, VariableDeclarator: 1 }],
 		"no-unused-vars": "off",
 		"dot-notation": 0,
-		allowIndentationTabs: true,
-		"no-tabs": 0
+		"no-tabs": [1, { allowIndentationTabs: true }],
+		quotes: ["error", "double"]
 	}
 }

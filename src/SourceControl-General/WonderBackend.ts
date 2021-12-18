@@ -1,4 +1,4 @@
-import { Project, ProjectsAreEqual } from './Project'
+import { Project, ProjectsAreEqual } from "./Project"
 
 // TODO: consider whether we want to have a projects field here. Essentially
 //       acts like a cache which comes with its own complexities. The alternative
@@ -75,7 +75,7 @@ export async function SyncProjectWithWonder (
 		// only possible reason two wouldn't be equal at this point would be a bug
 		if (!ProjectsAreEqual(project, updatedWonderBackendProject)) {
 			throw new Error(
-				'Unable to update out of sync project ' + project.title + ' in backend.'
+				"Unable to update out of sync project " + project.title + " in backend."
 			)
 		}
 

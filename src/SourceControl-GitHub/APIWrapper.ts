@@ -33,14 +33,14 @@ export class APIWrapper {
 	userAccessTokenMap: AccessTokenMap
 	userAuthOctokitMap: AuthOctokitMap
 
-	constructor() {
+	constructor () {
 		this.userOctokit = null
 		this.userAuthentication = null
 		this.userAccessTokenMap = {}
 		this.userAuthOctokitMap = {}
 	}
 
-	checkUserAccessTokenExists(userId): boolean {
+	checkUserAccessTokenExists (userId): boolean {
 		// Checks whether there is a userOctokit in this cache
 		return !!(
 			this.userAuthOctokitMap[userId] && this.userAccessTokenMap[userId]
@@ -55,7 +55,7 @@ export class APIWrapper {
 	 * @param  {type} state: string OAuth state
 	 * @return {type} accessToken: string
 	 */
-	async createOctokitWithAccessToken(
+	async createOctokitWithAccessToken (
 		code: string,
 		userId: string
 	): Promise<void> {
@@ -80,7 +80,7 @@ export class APIWrapper {
 	 *
 	 * @return {type} [userRepos]: Array<UserRepo>
 	 */
-	async getUserOrgs(userId): Promise<Array<UserRepo>> {
+	async getUserOrgs (userId): Promise<Array<UserRepo>> {
 		if (!this.checkUserAccessTokenExists(userId)) {
 			throw new Error("No authenticated user!")
 		}
@@ -107,7 +107,7 @@ export class APIWrapper {
 	 * @param  {type} orgName: string organization name
 	 * @return {type}                 a GitHub organization
 	 */
-	async getOrganization(
+	async getOrganization (
 		orgName: string,
 		userId: string
 	): Promise<Organization> {
@@ -142,7 +142,7 @@ export class APIWrapper {
 		return new Organization(orgName, id.toString(), repositories)
 	}
 
-	async getRepository(
+	async getRepository (
 		orgName: string,
 		repoName: string,
 		repoId: string,
@@ -158,7 +158,7 @@ export class APIWrapper {
 
 	// uses undocumented API:
 	// https://stackoverflow.com/questions/40798018/are-the-github-repository-id-numbers-permanent
-	async getRepositoryById(orgName, repoId: string): Promise<Repository> {
+	async getRepositoryById (orgName, repoId: string): Promise<Repository> {
 		const repoResp = await defaultOctokit.request(
 			"GET /repositories/" + repoId,
 			{
@@ -178,7 +178,7 @@ export class APIWrapper {
 		return this.resolveRepository(repo, null)
 	}
 
-	async resolveRepository(repo: Repository, userId): Promise<Repository> {
+	async resolveRepository (repo: Repository, userId): Promise<Repository> {
 		// if > 100 issues, will be paged
 		// https://github.com/wondrous-dev/source-control-integrations/issues/10
 		const octokit = this.userAuthOctokitMap[userId]
@@ -222,7 +222,7 @@ export class APIWrapper {
 		return repo
 	}
 
-	async getMilestones(
+	async getMilestones (
 		orgName: string,
 		repoName: string,
 		userId

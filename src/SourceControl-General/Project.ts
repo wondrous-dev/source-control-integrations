@@ -1,6 +1,6 @@
-import { SourceType } from '../Common/SourceType'
-import { Milestone, MilestonesAreEqual } from './Milestone'
-import { Task, TasksAreEqual } from './Task'
+import { SourceType } from "../Common/SourceType"
+import { Milestone, MilestonesAreEqual } from "./Milestone"
+import { Task, TasksAreEqual } from "./Task"
 
 /**
  * A project is a named entity (title) with multiple tasks. Sync typically means

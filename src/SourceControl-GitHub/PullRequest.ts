@@ -1,29 +1,29 @@
-import { Status } from '../SourceControl-General/Status'
-import { Task } from '../SourceControl-General/Task'
-import { TaskType } from '../SourceControl-General/TaskType'
+import { Status } from "../SourceControl-General/Status"
+import { Task } from "../SourceControl-General/Task"
+import { TaskType } from "../SourceControl-General/TaskType"
 
 /**
  * See response to "get pull request" for all available fields:
  * https://docs.github.com/en/rest/reference/pulls#list-pull-requests
  */
 export class PullRequest implements Task {
-  id: string;
+	id: string
 
-  title: string;
+	title: string
 
-  status: Status;
+	status: Status
 
-  taskType: TaskType;
+	taskType: TaskType
 
-  constructor (id: string, title: string, stateString: string) {
-  	this.id = id
-  	this.title = title
-  	this.status = stateString == 'open' ? Status.InProgress : Status.Completed
-  	this.taskType = TaskType.PullRequest
-  }
+	constructor (id: string, title: string, stateString: string) {
+		this.id = id
+		this.title = title
+		this.status = stateString === "open" ? Status.InProgress : Status.Completed
+		this.taskType = TaskType.PullRequest
+	}
 
-  // https://github.com/wondrous-dev/source-control-integrations/issues/8
-  updateStatus (newStatus: Status): boolean {
-  	throw Error('Not implemented. When implemented, update to ' + newStatus)
-  }
+	// https://github.com/wondrous-dev/source-control-integrations/issues/8
+	updateStatus (newStatus: Status): boolean {
+		throw Error("Not implemented. When implemented, update to " + newStatus)
+	}
 }

@@ -1,10 +1,10 @@
-import { Router } from 'express'
-import { apiWrapper } from '../SourceControl-GitHub/APIWrapper'
+import { Router } from "express"
+import { apiWrapper } from "../SourceControl-GitHub/APIWrapper"
 
 const router = Router()
 
-router.get('/', (req, res) => {
-	res.send('OK')
+router.get("/", (req, res) => {
+	res.send("OK")
 })
 
 /**
@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
  * @return {type} [Organization]
  */
 
-router.post('/github/user/organizations', async (req, res) => {
+router.post("/github/user/organizations", async (req, res) => {
 	const { code, userId } = req.body
 
 	if (!apiWrapper.checkUserAccessTokenExists(userId)) {
@@ -35,7 +35,7 @@ router.post('/github/user/organizations', async (req, res) => {
  * @return {type} {tasks: [Tasks], milestones: [Milestones]}
  */
 
-router.post('/github/user/task-import', async (req, res) => {
+router.post("/github/user/task-import", async (req, res) => {
 	//
 	const { orgName, userId } = req.body
 	if (!apiWrapper.checkUserAccessTokenExists(userId)) {
