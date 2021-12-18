@@ -1,6 +1,6 @@
-import { SourceType } from "../Common/SourceType";
-import { Milestone, MilestonesAreEqual } from "./Milestone";
-import { Task, TasksAreEqual } from "./Task";
+import { SourceType } from '../Common/SourceType'
+import { Milestone, MilestonesAreEqual } from './Milestone'
+import { Task, TasksAreEqual } from './Task'
 
 /**
  * A project is a named entity (title) with multiple tasks. Sync typically means
@@ -28,33 +28,33 @@ export interface Project {
  * @param  {type} b: Project description
  * @return {type}            description
  */
-export function ProjectsAreEqual(a: Project, b: Project): boolean {
-  if (a.id !== b.id || a.title !== b.title) {
-    return false;
-  }
+export function ProjectsAreEqual (a: Project, b: Project): boolean {
+	if (a.id !== b.id || a.title !== b.title) {
+		return false
+	}
 
-  if (a.tasks.length !== b.tasks.length) {
-    return false;
-  }
+	if (a.tasks.length !== b.tasks.length) {
+		return false
+	}
 
-  for (let key in a.tasks) {
-    if (!(key in b.tasks) || !TasksAreEqual(a.tasks[key], b.tasks[key])) {
-      return false;
-    }
-  }
+	for (const key in a.tasks) {
+		if (!(key in b.tasks) || !TasksAreEqual(a.tasks[key], b.tasks[key])) {
+			return false
+		}
+	}
 
-  if (a.milestones.length !== b.milestones.length) {
-    return false;
-  }
+	if (a.milestones.length !== b.milestones.length) {
+		return false
+	}
 
-  for (let key in a.milestones) {
-    if (
-      !(key in b.milestones) ||
+	for (const key in a.milestones) {
+		if (
+			!(key in b.milestones) ||
       !MilestonesAreEqual(a.milestones[key], b.milestones[key])
-    ) {
-      return false;
-    }
-  }
+		) {
+			return false
+		}
+	}
 
-  return true;
+	return true
 }

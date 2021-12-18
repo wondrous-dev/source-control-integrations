@@ -1,8 +1,8 @@
-import { Milestone } from "../SourceControl-General/Milestone"
-import { Project } from "../SourceControl-General/Project"
-import { SourceType } from "../Common/SourceType"
-import { Task } from "../SourceControl-General/Task"
-import { APIWrapper } from "./APIWrapper"
+import { Milestone } from '../SourceControl-General/Milestone'
+import { Project } from '../SourceControl-General/Project'
+import { SourceType } from '../Common/SourceType'
+import { Task } from '../SourceControl-General/Task'
+import { APIWrapper } from './APIWrapper'
 
 /**
  * See response to "get milestone" for all available fields:
@@ -21,7 +21,7 @@ export class Repository implements Project {
 
 	sourceType: SourceType
 
-	constructor(id: string, title: string, orgName: string) {
+	constructor (id: string, title: string, orgName: string) {
 		this.id = id
 		this.title = title
 		this.orgName = orgName
@@ -33,14 +33,14 @@ export class Repository implements Project {
 	/**
 	 * getTasks - helper to get all the tasks in a repo
 	 */
-	getTasks() {
+	getTasks () {
 		return Object.values(this.tasks)
 	}
 
 	/**
 	 * getTasks - helper to get all the tasks in a repo
 	 */
-	getMilestones() {
+	getMilestones () {
 		return Object.values(this.milestones)
 	}
 
@@ -49,9 +49,9 @@ export class Repository implements Project {
 	 *
 	 * @param  {type} task: Task
 	 */
-	addTask(task: Task) {
+	addTask (task: Task) {
 		if (task.id in this.tasks) {
-			throw Error("Unexpected duplicate task")
+			throw Error('Unexpected duplicate task')
 		} else {
 			this.tasks[task.id.toString()] = task
 		}
@@ -63,9 +63,9 @@ export class Repository implements Project {
 	 *
 	 * @param  {type} task: Task
 	 */
-	addMilestone(milestone: Milestone) {
+	addMilestone (milestone: Milestone) {
 		if (milestone.id in this.milestones) {
-			throw Error("Unexpected duplicate milestone")
+			throw Error('Unexpected duplicate milestone')
 		} else {
 			this.milestones[milestone.id] = milestone
 		}
@@ -79,7 +79,7 @@ export class Repository implements Project {
 	 *                            still part of this org and still exists. Throws
 	 *                            in exceptional circumstance.
 	 */
-	async synchronize(): Promise<boolean> {
+	async synchronize (): Promise<boolean> {
 		try {
 			const apiWrapper = new APIWrapper()
 			const newRepoState = await apiWrapper.getRepositoryById(

@@ -1,4 +1,4 @@
-import { Status } from "./Status";
+import { Status } from './Status'
 
 /**
  * Since Wonder is a task management suite for DAO's, not every user will be a dev.
@@ -25,6 +25,6 @@ export interface Task {
  * @param  {type} b: Task
  * @return {type} boolen - whether or not the two are equal
  */
-export function TasksAreEqual(a: Task, b: Task): boolean {
-  return a.id === b.id && a.title === b.title && a.status === b.status;
+export function TasksAreEqual (a: Task, b: Task): boolean {
+	return a.id === b.id && a.title === b.title && a.status === b.status
 }

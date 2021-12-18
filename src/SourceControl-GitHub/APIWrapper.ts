@@ -40,7 +40,7 @@ export class APIWrapper {
 		this.userAuthOctokitMap = {}
 	}
 
-	checkUserAccessTokenExists(userId): Boolean {
+	checkUserAccessTokenExists(userId): boolean {
 		// Checks whether there is a userOctokit in this cache
 		return !!(
 			this.userAuthOctokitMap[userId] && this.userAccessTokenMap[userId]
@@ -190,15 +190,13 @@ export class APIWrapper {
 				repo: repo.title
 			}
 		)
-
+		// Let's just track open PRs
 		respIssues.data.forEach((i) => {
-			if (!i.pull_request) {
+			if (!i.pull_request && i.state === "open") {
 				const issue = new Issue(i.id.toString(), i.title, i.state)
 				repo.addTask(issue)
 			}
 		})
-
-		// Let's just only track open PRs for now
 
 		// if > 100 prs, will be paged
 		// https://github.com/wondrous-dev/source-control-integrations/issues/10

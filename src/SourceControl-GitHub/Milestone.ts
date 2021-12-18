@@ -1,6 +1,6 @@
-import { Milestone as GeneralMilestone } from "../SourceControl-General/Milestone";
-import { Status } from "../SourceControl-General/Status";
-import { Task } from "../SourceControl-General/Task";
+import { Milestone as GeneralMilestone } from '../SourceControl-General/Milestone'
+import { Status } from '../SourceControl-General/Status'
+import { Task } from '../SourceControl-General/Task'
 
 export class Milestone implements GeneralMilestone {
   id: string;
@@ -21,25 +21,25 @@ export class Milestone implements GeneralMilestone {
 
   tasks: { [key: string]: Task };
 
-  constructor(
-    id: string,
-    title: string,
-    orgName: string,
-    description: string,
-    dueDate: Date,
-    startDate: Date,
-    stateString: string,
-    completionDate: Date = null
+  constructor (
+  	id: string,
+  	title: string,
+  	orgName: string,
+  	description: string,
+  	dueDate: Date,
+  	startDate: Date,
+  	stateString: string,
+  	completionDate: Date = null
   ) {
-    this.id = id;
-    this.title = title;
-    this.orgName = orgName;
-    this.description = description;
-    this.dueDate = dueDate;
-    this.startDate = startDate;
-    this.completionDate = completionDate;
-    this.status = stateString == "open" ? Status.InProgress : Status.Completed;
-    this.tasks = {};
+  	this.id = id
+  	this.title = title
+  	this.orgName = orgName
+  	this.description = description
+  	this.dueDate = dueDate
+  	this.startDate = startDate
+  	this.completionDate = completionDate
+  	this.status = stateString == 'open' ? Status.InProgress : Status.Completed
+  	this.tasks = {}
   }
 
   /**
@@ -47,21 +47,21 @@ export class Milestone implements GeneralMilestone {
    *
    * @param  {type} task: Task
    */
-  addTask(task: Task) {
-    if (task.id in this.tasks) {
-      throw Error("Unexpected duplicate task");
-    } else {
-      this.tasks[task.id] = task;
-    }
+  addTask (task: Task) {
+  	if (task.id in this.tasks) {
+  		throw Error('Unexpected duplicate task')
+  	} else {
+  		this.tasks[task.id] = task
+  	}
   }
 
   // https://github.com/wondrous-dev/source-control-integrations/issues/8
-  updateStatus(newStatus: Status): boolean {
-    throw Error("Not implemented. When implemented, update to " + newStatus);
+  updateStatus (newStatus: Status): boolean {
+  	throw Error('Not implemented. When implemented, update to ' + newStatus)
   }
 
   // https://github.com/wondrous-dev/source-control-integrations/issues/8
-  complete(): boolean {
-    throw Error("Not implemented.");
+  complete (): boolean {
+  	throw Error('Not implemented.')
   }
 }

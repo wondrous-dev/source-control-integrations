@@ -1,4 +1,4 @@
-import { Repository } from "./Repository";
+import { Repository } from './Repository'
 
 /**
  * See response to "get organization" for all available fields:
@@ -11,13 +11,13 @@ export class Organization {
 
   repos: { [key: string]: Repository };
 
-  constructor(name: string, id: string, repos: { [key: string]: Repository }) {
-    this.name = name;
-    this.id = id;
-    this.repos = repos;
+  constructor (name: string, id: string, repos: { [key: string]: Repository }) {
+  	this.name = name
+  	this.id = id
+  	this.repos = repos
   }
 
-  containsRepo(repoName: string): boolean {
-    return repoName in this.repos;
+  containsRepo (repoName: string): boolean {
+  	return repoName in this.repos
   }
 }

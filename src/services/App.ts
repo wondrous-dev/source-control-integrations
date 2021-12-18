@@ -1,15 +1,15 @@
-import { Server } from "./Server"
+import { Server } from './Server'
 
-import { Injector } from "reduct"
+import { Injector } from 'reduct'
 
 export class App {
 	private server: Server
 
-	constructor(deps: Injector) {
+	constructor (deps: Injector) {
 		this.server = deps(Server)
 	}
 
-	start(): void {
+	start (): void {
 		this.server.start()
 	}
 }
